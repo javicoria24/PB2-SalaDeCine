@@ -2,6 +2,8 @@ package com.morga.saladecine;
 
 public class Asiento {
 
+	
+
 	private String nombreComprador;
 	private boolean ocupado;
 
@@ -32,5 +34,9 @@ public class Asiento {
 
 	public boolean estaOcupado() {
 		return ocupado;
+	}
+	@Override
+	public String toString() {
+		return "Asiento [nombreComprador=" + nombreComprador + "]";
 	}
 }

@@ -8,7 +8,7 @@ public class PeliculaAccion extends Pelicula {
 	}
 
 	@Override
-	public String mostrarSipnopsis() {
+	public  String mostrarSinopsis() {
 		String sinopsis= "sinopsis de pelicula de accion" + "\n";
 		sinopsis+= "Titulo: " + super.getTitulo() +"\n" ;
 		sinopsis+= "Duracion" + super.getDuracion() +"\n" ;

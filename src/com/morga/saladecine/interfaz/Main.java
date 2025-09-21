@@ -1,11 +1,20 @@
-package com.morga.saladecine;
+package com.morga.saladecine.interfaz;
 
 import java.util.Scanner;
+
+import com.morga.saladecine.Asiento;
+import com.morga.saladecine.Pelicula;
+import com.morga.saladecine.PeliculaAccion;
+import com.morga.saladecine.PeliculaComedia;
+import com.morga.saladecine.PeliculaDrama;
+import com.morga.saladecine.PeliculaInfantil;
+import com.morga.saladecine.PeliculaTerror;
+import com.morga.saladecine.SalaCine;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static SalaCine sala;
-    private static Pelicula[] peliculas = new Pelicula[100];
+    private static Pelicula[] peliculas = new Pelicula[10];
     
     public static void main(String[] args) {
         inicializarSistema();
@@ -89,7 +98,7 @@ public class Main {
                     mostrarInfoPelicula();
                     break;
                 case 6:
-                    sala.mostrarButacasDetalle();
+                    mostrarButacasDetalle(sala);
                     break;
                 case 7:
                     reiniciarSala();
@@ -110,7 +119,22 @@ public class Main {
         } while (opcion != 0);
     }
     
-    private static void gestionarPeliculas() {
+    private static void mostrarButacasDetalle(SalaCine sala2) {
+    	Asiento[][] butacas = sala2.getButacas();
+    	for (int i = 0; i < butacas.length; i++) {
+
+			for (int j = 0; j < butacas[0].length; j++) {
+				if (butacas[i][j].estaOcupado()) {
+				 butacas[i][j].getNombreComprador();
+				}
+
+			}
+
+		}
+		
+	}
+
+	private static void gestionarPeliculas() {
         System.out.println("\n🎬 CATÁLOGO DE PELÍCULAS DISPONIBLES");
         System.out.println("=".repeat(50));
         
@@ -128,7 +152,7 @@ public class Main {
         
         if (opcion >= 1 && opcion <= 10) {
             Pelicula peliculaSeleccionada = peliculas[opcion - 1];
-            cambiarPelicula(peliculaSeleccionada);
+            sala.cambiarPelicula(peliculaSeleccionada);
             peliculaSeleccionada.mostrarSinopsis();
         } else if (opcion == 11) {
             if (sala.getPeliculaActual() != null) {
@@ -160,7 +184,7 @@ public class Main {
         System.out.println("Película actual: " + sala.getPeliculaActual().getTitulo());
         System.out.println("Edad mínima requerida: " + sala.getPeliculaActual().getEdadMinima() + " años");
         
-        sala.mostrarButacas();
+        sala.getButacas();
         
         System.out.print("Ingrese el nombre del comprador: ");
         scanner.nextLine(); // Limpiar buffer
@@ -173,11 +197,11 @@ public class Main {
         System.out.print("Ingrese la edad del cliente: ");
         int edad = scanner.nextInt();
         
-        boolean exito = sala.venderBoleto(fila, columna, edad, nombreComprador);
+        boolean exito = sala.venderBoleta(fila, columna, edad, nombreComprador);
         
         if (exito) {
             System.out.println("🎉 ¡Boleto vendido exitosamente!");
-            sala.mostrarButacas();
+            sala.getButacas();
         } else {
             System.out.println("❌ No se pudo vender el boleto.");
         }
@@ -185,7 +209,7 @@ public class Main {
     
     private static void liberarAsiento() {
         System.out.println("\n🔓 LIBERAR ASIENTO");
-        sala.mostrarButacas();
+        sala.getButacas();
         
         System.out.print("Ingrese la fila del asiento a liberar: ");
         int fila = scanner.nextInt();
@@ -196,13 +220,18 @@ public class Main {
         
         if (exito) {
             System.out.println("🎉 ¡Asiento liberado exitosamente!");
-            sala.mostrarButacas();
+            sala.getButacas();
         }
     }
     
     private static void mostrarInfoPelicula() {
         if (sala.getPeliculaActual() != null) {
             System.out.println("\n📋 INFORMACIÓN DE LA PELÍCULA ACTUAL");
+          //if(obtenerGenero(sala.getPeliculaActual()).equalsIgnoreCase("ACCION"))
+            	
+            	
+            
+            
             sala.getPeliculaActual().mostrarSinopsis();
         } else {
             System.out.println("❌ No hay película en cartelera actualmente.");
@@ -216,17 +245,17 @@ public class Main {
         
         if (confirmacion.equalsIgnoreCase("s") || confirmacion.equalsIgnoreCase("si")) {
             sala.reiniciarSala();
-            sala.mostrarButacas();
+            sala.getButacas();
         } else {
             System.out.println("❌ Operación cancelada.");
         }
     }
     
-    public void mostrarButacas(SalaCine sala) {
+    public static void mostrarButacas(SalaCine sala) {
     	Asiento[][] butacas = sala.getButacas();
     	
     	System.out.println("\n=== ESTADO DE LA SALA ===");
-        if (sala.peliculaEnCartelera != null) {
+        if (sala.getPeliculaActual() != null) {
             System.out.println("🎬 Película: " + sala.getTitulo());
         }
         System.out.println("📊 Ocupación: " + sala.contarAsientosOcupados() + "/" + sala.getTotalAsientos() + " asientos");
