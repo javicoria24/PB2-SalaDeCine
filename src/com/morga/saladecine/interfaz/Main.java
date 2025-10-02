@@ -122,8 +122,8 @@ public class Main {
     private static void mostrarButacasDetalle(SalaCine sala2) {
     	Asiento[][] butacas = sala2.getButacas();
     	for (int i = 0; i < butacas.length; i++) {
-
-			for (int j = 0; j < butacas[0].length; j++) {
+    		Asiento [] filas= butacas[i];
+			for (int j = 0; j < filas.length; j++) {
 				if (butacas[i][j].estaOcupado()) {
 				 butacas[i][j].getNombreComprador();
 				}
