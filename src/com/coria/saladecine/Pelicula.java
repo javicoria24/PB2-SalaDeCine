@@ -1,4 +1,4 @@
-package com.morga.saladecine;
+package com.coria.saladecine;
 
 import java.util.Objects;
 

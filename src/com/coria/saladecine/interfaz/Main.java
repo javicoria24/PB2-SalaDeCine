@@ -1,15 +1,15 @@
-package com.morga.saladecine.interfaz;
+package com.coria.saladecine.interfaz;
 
 import java.util.Scanner;
 
-import com.morga.saladecine.Asiento;
-import com.morga.saladecine.Pelicula;
-import com.morga.saladecine.PeliculaAccion;
-import com.morga.saladecine.PeliculaComedia;
-import com.morga.saladecine.PeliculaDrama;
-import com.morga.saladecine.PeliculaInfantil;
-import com.morga.saladecine.PeliculaTerror;
-import com.morga.saladecine.SalaCine;
+import com.coria.saladecine.Asiento;
+import com.coria.saladecine.Pelicula;
+import com.coria.saladecine.PeliculaAccion;
+import com.coria.saladecine.PeliculaComedia;
+import com.coria.saladecine.PeliculaDrama;
+import com.coria.saladecine.PeliculaInfantil;
+import com.coria.saladecine.PeliculaTerror;
+import com.coria.saladecine.SalaCine;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);

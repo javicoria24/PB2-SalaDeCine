@@ -1,8 +1,8 @@
-package com.morga.saladecine;
+package com.coria.saladecine;
 
-public class PeliculaTerror extends Pelicula {
+public class PeliculaInfantil extends Pelicula {
 
-	public PeliculaTerror(String titulo, int duracion, int edadMinima) {
+	public PeliculaInfantil(String titulo, int duracion, int edadMinima) {
 		super(titulo, duracion, edadMinima);
 		
 	}

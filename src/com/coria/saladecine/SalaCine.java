@@ -1,4 +1,4 @@
-package com.morga.saladecine;
+package com.coria.saladecine;
 
 public class SalaCine {
 	private Asiento[][] butacas;

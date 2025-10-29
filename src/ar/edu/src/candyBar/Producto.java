@@ -1,15 +1,45 @@
 package ar.edu.src.candyBar;
 
-public abstract class Producto {
+import java.util.Objects;
+
+public abstract class Producto implements Comparable<Producto> {
 
 	private String nombre;
-	private double precio;
-	private int stock;
+	private Double precio;
+	private Integer stock;
 
 	public Producto(String nombre, double precio, int stock) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
+	}
+
+	// @Todo sobre escirbo el compare to y lo ordeno de forma natural ascendente
+	/*
+	 * si empieza con el objetot de parametro ya parace que seria descendente
+	 */
+	@Override
+	public int compareTo(Producto producto) {
+
+		return this.stock.compareTo(producto.getStock());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre, precio, stock);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Producto other = (Producto) obj;
+		return Objects.equals(nombre, other.nombre)
+				&& Double.doubleToLongBits(precio) == Double.doubleToLongBits(other.precio);// && stock == other.stock;
 	}
 
 	public abstract double calcularPrecioFinal();
@@ -18,11 +48,11 @@ public abstract class Producto {
 		return nombre;
 	}
 
-	public double getPrecio() {
+	public Double getPrecio() {
 		return precio;
 	}
 
-	public int getStock() {
+	public Integer getStock() {
 		return stock;
 	}
 
