@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ar.edu.src.candyBar.*;
+import ar.edu.src.excepciones.ProductoDuplicadoException;
+import ar.edu.src.excepciones.ProductoNoEcontradoException;
 
 public class CandyBarTest {
 
@@ -20,6 +22,7 @@ public class CandyBarTest {
 	private Bebida gaseosa;
 	private Bebida jugo;
 	private Bebida agua;
+	private Snack gomitas;
 
 	// Se ejecuta antes de cada test para inicializar el objeto CandyBar
 	@Before
@@ -30,11 +33,12 @@ public class CandyBarTest {
 		gaseosa = new Bebida("coca-cola", 5.2, Contenedor.BOTELLA, 25);
 		jugo = new Bebida("cepita", 3.5, Contenedor.VASO, 13);
 		agua = new Bebida("aguita", 1.5, Contenedor.VASO, 22);
+		gomitas = new Snack("gomitas", 2.5, Tamano.MEDIANO, 10);
 
 	}
 
 	@Test
-	public void testAgregarProductoMasDeUnProductoEnFormaDinamica() {
+	public void testAgregarProductoMasDeUnProductoEnFormaDinamica() throws ProductoDuplicadoException {
 
 		assertTrue(candyBar.agregarProducto(palomitas));
 		assertEquals(1, contarProductosEnInventario());
@@ -51,16 +55,16 @@ public class CandyBarTest {
 	}
 
 	@Test
-	public void queSePuedaOrdenarNaturalAscendenteLosProductosAgregadosPorStock() {
+	public void queSePuedaOrdenarNaturalAscendenteLosProductosAgregadosPorStock() throws ProductoDuplicadoException {
 
 		candyBar.agregarProducto(gaseosa);
 
 		candyBar.agregarProducto(jugo);
 
 		candyBar.agregarProducto(refresco);
-		candyBar.agregarProducto(refresco);
+		//candyBar.agregarProducto(refresco);
 
-		candyBar.agregarProducto(palomitas);
+	
 		candyBar.agregarProducto(palomitas);
 
 		List<Producto> productosAgregados = new ArrayList<>();
@@ -74,26 +78,28 @@ public class CandyBarTest {
 	}
 
 	@Test
-	public void queSePuedaDevolverUnaListaDeBebidaOrdenadaAscendentePorPrecio() {
+	public void queSePuedaDevolverUnaListaDeBebidaOrdenadaAscendentePorPrecio() throws ProductoDuplicadoException {
+		candyBar.agregarProducto(palomitas);
 		candyBar.agregarProducto(gaseosa);
 
 		candyBar.agregarProducto(jugo);
+		candyBar.agregarProducto(gomitas);
 
 		candyBar.agregarProducto(refresco);
 		candyBar.agregarProducto(agua);
 
-		List<Producto> bebidas = new ArrayList<>();
-		bebidas.addAll(candyBar.obtenerBebidasOrdenadas());
+		List<Producto> bebida = new ArrayList<>();
+		bebida.addAll(candyBar.obtenerBebidasOrdenadas());
 
-		assertEquals(agua, bebidas.get(0));
-		assertEquals(refresco, bebidas.get(1));
-		assertEquals(jugo, bebidas.get(2));
-		assertEquals(gaseosa, bebidas.get(3));
+		assertEquals(agua, bebida.get(0));
+		assertEquals(refresco, bebida.get(1));
+		assertEquals(jugo, bebida.get(2));
+		assertEquals(gaseosa, bebida.get(3));
 
 	}
 
 	@Test
-	public void queSePuedaDevolverUnaListaDeSnackOrdenadaPorNombre() {
+	public void queSePuedaDevolverUnaListaDeSnackOrdenadaPorNombre() throws ProductoDuplicadoException {
 
 		Snack gomitas = new Snack("gomitas", 2.5, Tamano.MEDIANO, 10);
 		Snack chocolate = new Snack("chocolates", 6.5, Tamano.PEQUENIO, 11);
@@ -102,9 +108,13 @@ public class CandyBarTest {
 		candyBar.agregarProducto(gomitas);
 
 		candyBar.agregarProducto(chocolate);
+		candyBar.agregarProducto(refresco);
+		candyBar.agregarProducto(agua);
 
 		candyBar.agregarProducto(alfajor);
 		candyBar.agregarProducto(caramelo);
+		candyBar.agregarProducto(jugo);
+		
 
 		List<Producto> snacks = new ArrayList<>();
 		snacks.addAll(candyBar.obtenerSnackOrdenado());
@@ -116,29 +126,30 @@ public class CandyBarTest {
 	}
 
 	@Test
-	public void testEliminarProductoExistente() {
+	public void testEliminarProductoExistente() throws ProductoDuplicadoException, ProductoNoEcontradoException {
 		candyBar.agregarProducto(palomitas);
 		candyBar.agregarProducto(refresco);
 
 		boolean eliminado = candyBar.eliminarProducto(palomitas);
 		assertTrue(eliminado);
 		assertEquals(1, contarProductosEnInventario());
-		boolean eliminado2 = candyBar.eliminarProducto(palomitas);
-		assertFalse(eliminado2);
+		boolean eliminado2 = candyBar.eliminarProducto(refresco);
+		assertTrue(eliminado2);
 		assertEquals(0, contarProductosEnInventario());
 	}
 
-	@Test
-	public void testEliminarProductoNoExistente() {
-		candyBar.agregarProducto(palomitas);
-
-		boolean eliminado = candyBar.eliminarProducto(refresco);
-		assertFalse(eliminado);
-		assertEquals(1, contarProductosEnInventario());
+	
+	@Test(expected = ProductoNoEcontradoException.class)
+	public void testEliminarProductoNoExistente() throws ProductoDuplicadoException, ProductoNoEcontradoException {
+	    candyBar.agregarProducto(palomitas);
+	    
+	   assertFalse( candyBar.eliminarProducto(refresco));
+	    assertEquals(1, contarProductosEnInventario());
 	}
+	
 
 	@Test
-	public void testInventarioLleno() {
+	public void testInventarioLleno() throws ProductoDuplicadoException {
 		// Llenar el inventario hasta su capacidad
 		for (int i = 0; i < 5; i++) {
 			candyBar.agregarProducto(new Snack("Snack " + i, 1.0, Tamano.MEDIANO, 5));

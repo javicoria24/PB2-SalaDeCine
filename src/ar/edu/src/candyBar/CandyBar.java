@@ -1,31 +1,47 @@
 package ar.edu.src.candyBar;
 
+import ar.edu.src.excepciones.*;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import ar.edu.src.excepciones.ProductoDuplicadoException;
+import ar.edu.src.excepciones.ProductoNoEcontradoException;
+
 public class CandyBar {
 
 	private Set<Producto> productos;
 
-	// private Producto[] productos;
-
 	public CandyBar() {
-		// this.productos = new Producto[cantidadDeProductos];
+
 		this.productos = new TreeSet<>();
 	}
 
 	/*
-	 * public boolean agregarProducto(Producto producto) { for (int i = 0; i <
-	 * this.productos.length; i++) { if (this.productos[i] == null) {
-	 * this.productos[i] = producto; return true; } } return false; }
+	 * public boolean agregarProducto(Producto producto) throws
+	 * ProductoDuplicadoException {
+	 *  boolean seAgrego = true;
+	 *   if
+	 * (!this.productos.add(producto)) { seAgrego = false; throw new
+	 * ProductoDuplicadoException(); }
+	 * 
+	 * return seAgrego;
 	 */
 
-	public boolean agregarProducto(Producto producto) {
+	public boolean agregarProducto(Producto producto) throws ProductoDuplicadoException {
+		boolean seAgrego = true;
+		if (!this.productos.add(producto)) {
+			seAgrego = false;
 
-		return this.productos.add(producto);
+		}
+		if (!seAgrego) {
+			throw new ProductoDuplicadoException();
+		}
+
+		return seAgrego;
 	}
 
 	public Set<Producto> obtenerInventario() {
@@ -33,35 +49,39 @@ public class CandyBar {
 		return this.productos;
 	}
 
-	/*
-	 * public boolean eliminarProducto(String string) { for (int i = 0; i <
-	 * this.productos.length; i++) { if (this.productos[i] != null &&
-	 * this.productos[i].getNombre().equalsIgnoreCase(string)) { this.productos[i] =
-	 * null; return true; } }
-	 * 
-	 * return false; }
-	 */
-
-	public boolean eliminarProducto(Producto producto) {
+	public boolean eliminarProducto(Producto producto) throws ProductoNoEcontradoException {
+		boolean seBorro = false;
 		for (int i = 0; i < this.productos.size(); i++) {
 			if (this.productos.contains(producto)) {
 				this.productos.remove(producto);
-				return true;
+				seBorro = true;
+				break; // Salimos del ciclo ya que encontramos el producto
 			}
 		}
-
-		return false;
+		if (!seBorro) {
+			throw new ProductoNoEcontradoException();
+		}
+		return seBorro;
 	}
 
 	public Set<Producto> obtenerBebidasOrdenadas() {
 		Set<Producto> bebidas = new TreeSet<>(new OrdenAscendenteDeBebidaPorPrecioBase());
-		bebidas.addAll(this.productos);
+		for (Producto p : this.productos) {
+			if (p instanceof Bebida) {
+				bebidas.add(p);
+			}
+		}
+
 		return bebidas;
 	}
 
 	public Set<Producto> obtenerSnackOrdenado() {
 		Set<Producto> snacks = new TreeSet<>(new OrdenarSnackPorNombre());
-		snacks.addAll(this.productos);
+		for (Producto p : this.productos) {
+			if (p instanceof Snack) {
+				snacks.add(p);
+			}
+		}
 		return snacks;
 	}
 

@@ -1,42 +1,47 @@
 package com.coria.saladecine;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import com.coria.saladecine.*;
+
 public class SalaCine {
-	private Asiento[][] butacas;
+
 	private Pelicula pelicula;
+	private Map<String, Integer> butacas;
 
-	public SalaCine(int fila, int columna) {
-
-		this.butacas = new Asiento[fila][columna];
-
-		for (int i = 0; i < fila; i++) {
-
-			for (int j = 0; j < columna; j++) {
-				this.butacas[i][j] = new Asiento();
-			}
-
-		}
-
+	// Adaptar Sala de cine para manejo de butacas dinámicamente. (Utilizar Map con
+	// LetrayNumero) (30%)
+//	
+	public SalaCine() {
+		this.butacas = new TreeMap<>();
+		this.pelicula = null;
 	}
 
-	public Asiento[][] getButacas() {
-		return this.butacas;
+	public String getButacas() {
+		String msj="";
+		for (Map.Entry<String, Integer> entrada : butacas.entrySet()) {
+			msj += " Asiento: " + entrada.getValue()  +"  nombre: " + entrada.getKey()+" \n"  ;
+		}
+		return msj;
 	}
 
 	public int contarAsientosOcupados() {
 		int contador = 0;
-
-		for (int i = 0; i < butacas.length; i++) {
-			for (int j = 0; j < butacas[i].length; j++) {
-				if (this.butacas[i][j].estaOcupado())
-					contador++;
+		for (Map.Entry<String, Integer> entrada : butacas.entrySet()) {
+			if (entrada.getValue() != null) {
+				contador++;
 			}
-
 		}
+
 		return contador;
 	}
 
 	public int getTotalAsientos() {
-		return butacas.length * butacas[0].length;
+		return this.butacas.size();
 	}
 
 	public void cambiarPelicula(Pelicula pelicula) {
@@ -49,15 +54,14 @@ public class SalaCine {
 		return this.pelicula;
 	}
 
-	public boolean venderBoleta(int fila, int columna, int edad, String nombreComprador) {
+	public boolean venderBoleta(String NombreComprador, Integer asiento, int edad) {
+		boolean venta = false;
+		if (!this.butacas.containsValue(asiento) && edad > this.pelicula.getEdadMinima()) {
+			this.butacas.put(NombreComprador, asiento);
+			venta = true;
+		}
+		return venta;
 
-		if (butacas[fila][columna].estaOcupado())
-			return false;
-		if (edad < this.pelicula.getEdadMinima())
-			return false;
-
-		butacas[fila][columna].ocupar(nombreComprador);
-		return true;
 	}
 
 	public String getTitulo() {
@@ -65,40 +69,21 @@ public class SalaCine {
 		return this.pelicula.getTitulo();
 	}
 
-	public boolean liberarAsiento(int fila, int columna) {
+	public boolean liberarAsiento(int numero, String nombre) {
+		boolean libero = false;
 
-		if (fila >= 0 && columna >= 0)
-			if (fila <= butacas.length && columna <= butacas[0].length) {
-				butacas[fila][columna].liberar();
-				return true;
-			}
-		return false;
+		if (this.butacas.containsValue(numero)) {
+			this.butacas.remove(nombre);
+			libero = true;
+		}
+		return libero;
 	}
 
 	public void reiniciarSala() {
 
-		for (int i = 0; i < this.butacas.length; i++) {
-
-			for (int j = 0; j < this.butacas[0].length; j++) {
-				this.butacas[i][j].liberar();
-			}
-
+		for (Map.Entry<String, Integer> entrada : butacas.entrySet()) {
+			entrada.setValue(null);
 		}
-
 	}
-
-/*	public String  mostrarButacasDetalle() {
-		for (int i = 0; i < this.butacas.length; i++) {
-
-			for (int j = 0; j < this.butacas[0].length; j++) {
-				if (this.butacas[i][j].estaOcupado()) {
-					return this.butacas[i][j].toString();
-				}
-
-			}
-
-		}return "no se hallo cleintes";
-
-	}*/
 
 }

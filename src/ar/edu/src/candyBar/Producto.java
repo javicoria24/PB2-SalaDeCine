@@ -21,7 +21,14 @@ public abstract class Producto implements Comparable<Producto> {
 	@Override
 	public int compareTo(Producto producto) {
 
-		return this.stock.compareTo(producto.getStock());
+		int comparacionStock = this.stock.compareTo(producto.getStock());
+		
+		if (comparacionStock > 0) {
+			return 1;
+		} else if (comparacionStock < 0) {
+			return -1;
+		}
+		return this.nombre.compareTo(producto.getNombre());
 	}
 
 	@Override
